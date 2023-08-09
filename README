@@ -1,0 +1,26 @@
+crc32.usl:
+/*
+fnCRC32 - Calculates the crc32 polynomial of a string
+
+Description: Generates the cyclic redundancy checksum polynomial of 32-bit lengths of the
+             input. This is usually to validate the integrity of data being transmitted.
+             
+Return Values: Returns the crc32 checksum of input as an integer.
+*/
+
+
+urlencode.usl:
+/*
+fnURLEncode - URL-encodes string
+
+Description: This function is convenient when encoding a string to be used in a query part
+             of a URL, as a convenient way to pass variables to the next page.
+	     
+Return Values: Returns a string in which all non-alphanumeric characters except -_. have
+               been replaced with a percent (%) sign followed by two hex digits and spaces
+               encoded as plus (+) signs. It is encoded the same way that the posted data
+               from a WWW form is encoded, that is the same way as in
+               application/x-www-form-urlencoded media type. This differs from the RFC 1738
+               encoding in that for historical reasons, spaces are encoded as plus (+)
+               signs.
+*/

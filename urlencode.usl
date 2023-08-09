@@ -1,0 +1,89 @@
+/**
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of this software nor the names of its contributors
+ *       may be used to endorse or promote products derived from this software
+ *       without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR 
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*
+fnURLEncode - URL-encodes string
+
+Description: This function is convenient when encoding a string to be used in a query part
+             of a URL, as a convenient way to pass variables to the next page.
+	     
+Return Values: Returns a string in which all non-alphanumeric characters except -_. have
+               been replaced with a percent (%) sign followed by two hex digits and spaces
+               encoded as plus (+) signs. It is encoded the same way that the posted data
+               from a WWW form is encoded, that is the same way as in
+               application/x-www-form-urlencoded media type. This differs from the RFC 1738
+               encoding in that for historical reasons, spaces are encoded as plus (+)
+               signs.
+*/	       
+string_function fnURLEncode( 
+	string szText)
+{
+	integer i;
+	integer nByte;
+	string szChar[3];
+	string szEncodedText[256];
+
+	for(i=1 to len(szText))
+	{
+		nByte = byte(szText, i);
+
+		switch(nByte)
+		{
+			/* Reserved characters */
+			case(36): szChar = "%24"; // Dollar ("$")
+			case(38): szChar = "%26"; // Ampersand ("&")
+			case(43): szChar = "%2B"; // Plus ("+")
+			case(44): szChar = "%2C"; // Comma (",")
+			case(47): szChar = "%2F"; // Forward slash/Virgule ("/")
+			case(58): szChar = "%3A"; // Colon (":")
+			case(59): szChar = "%3B"; // Semi-colon (";")
+			case(61): szChar = "%3D"; // Equals ("=")
+			case(63): szChar = "%3F"; // Question mark ("?")
+			case(64): szChar = "%40"; // 'At' symbol ("@")
+
+			/* Unsafe characters */
+			case(32):  szChar = "%20"; // Space
+			case(34):  szChar = "%22"; // Quotation marks
+			case(60):  szChar = "%3C"; // 'Less Than' symbol ("<")
+			case(62):  szChar = "%3E"; // 'Greater Than' symbol (">")
+			case(35):  szChar = "%23"; // 'Pound' character ("#")
+			case(37):  szChar = "%25"; // Percent character ("%")
+			case(123): szChar = "%7B"; // Left Curly Brace ("{")
+			case(125): szChar = "%7D"; // Right Curly Brace ("}")
+			case(124): szChar = "%7C"; // Vertical Bar/Pipe ("|")
+			case(92):  szChar = "%5C"; // Backslash ("\")
+			case(94):  szChar = "%5E"; // Caret ("^")
+			case(126): szChar = "%7E"; // Tilde ("~")
+			case(91):  szChar = "%5B"; // Left Square Bracket ("[")
+			case(93):  szChar = "%5D"; // Right Square Bracket ("]")
+			case(96):  szChar = "%60"; // Grave Accent ("`")
+
+			default: szChar = chr(nByte);
+		}
+
+		szEncodedText = szEncodedText + szChar;
+	}
+
+	return(szEncodedText);
+}

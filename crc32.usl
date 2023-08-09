@@ -1,0 +1,61 @@
+/*
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of "Growl for Crestron" nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR 
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+/*
+fnCRC32 - Calculates the crc32 polynomial of a string
+
+Description: Generates the cyclic redundancy checksum polynomial of 32-bit lengths of the
+             input. This is usually to validate the integrity of data being transmitted.
+             
+Return Values: Returns the crc32 checksum of input as an integer.
+*/
+
+string_function fnCRC32(
+	string szInput)
+{
+	integer i, j;
+	integer nByte;
+	long_integer nCRC;
+	string szCRC[8];
+   
+	nCRC = 0xFFFFFFFF;
+
+	for(i = 1 to len(szInput))
+	{
+		nByte = byte(szInput, i);
+		nCRC = nCRC^(nByte <<  24);
+
+		for(j = 1 to 8)
+		{
+			if((nCRC & 0x80000000) = 0x80000000) nCRC = (nCRC << 1)^0x04C11DB7;
+			else nCRC = nCRC << 1;
+		}
+
+	}
+
+	szCRC = lower(lToHex(nCRC));
+	while(len(szCRC) < 8) szCRC = "0" + szCRC;
+
+	return(szCRC);
+}
